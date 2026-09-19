@@ -64,6 +64,6 @@
 .rf-upload-box,.rf-select-box,.rf-search,.rf-chat-input { box-shadow:inset 0 1px rgb(255 255 255 / .06); transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease; }
 .rf-upload-box:hover,.rf-select-box:focus-within,.rf-search:focus-within,.rf-chat-input:focus-within { border-color:color-mix(in oklch,var(--primary) 65%,var(--border)); box-shadow:0 0 0 4px color-mix(in oklch,var(--primary) 12%,transparent), inset 0 1px rgb(255 255 255 / .08); transform:translateY(-1px); }
 .rf-orb { box-shadow:inset -18px -20px 35px rgb(15 23 42 / .4),0 0 75px rgb(124 58 237 / .42),0 0 0 1px rgb(255 255 255 / .2); }
-@media (max-width:1023px) { .rf-app header button:first-child { display:none; } }
+@media (max-width:767px) { .rf-app header button:first-child { display:flex; } }
 @media (max-width:640px) { .rf-flow svg { transform:rotate(90deg); } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }

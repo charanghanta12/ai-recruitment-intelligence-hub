@@ -159,5 +159,38 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(circle at 12% 8%, color-mix(in oklch, var(--primary) 12%, transparent), transparent 28rem), radial-gradient(circle at 85% 18%, color-mix(in oklch, #22d3ee 9%, transparent), transparent 24rem);
   }
+}
+
+.rf-app {
+  background: linear-gradient(135deg, oklch(0.105 0.035 268), oklch(0.14 0.045 260) 48%, oklch(0.095 0.03 250));
+}
+
+.rf-card {
+  border: 1px solid color-mix(in oklch, var(--border) 72%, #9d8cff 28%);
+  background: linear-gradient(145deg, color-mix(in oklch, var(--card) 92%, #9d8cff 8%), color-mix(in oklch, var(--card) 97%, #22d3ee 3%));
+  box-shadow: 0 18px 45px rgb(0 0 0 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.rf-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklch, var(--primary) 55%, var(--border));
+  box-shadow: 0 24px 55px rgb(0 0 0 / 0.24), 0 0 28px color-mix(in oklch, var(--primary) 18%, transparent);
+}
+
+.rf-sidebar {
+  background: linear-gradient(180deg, oklch(0.12 0.04 270), oklch(0.08 0.025 260));
+  box-shadow: 18px 0 55px rgb(0 0 0 / 0.22);
+}
+
+.rf-glow {
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  box-shadow: 0 0 22px rgb(139 92 246 / 0.42);
+}
+
+.rf-grid {
+  background-image: linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
 }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import httpx
 from typing import Optional
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
@@ -7,13 +8,17 @@ from pypdf import PdfReader
 from sqlalchemy.orm import Session
 
 try:
+    from app.config import settings
     from app.database import Base, engine, get_db
     from app.repositories import ResumeRepository
     from app.schemas import ResumeRead
+    from app.groq_client import GroqResumeParser
 except ImportError:  # pragma: no cover
+    from config import settings
     from database import Base, engine, get_db
     from repositories import ResumeRepository
     from schemas import ResumeRead
+    from groq_client import GroqResumeParser
 
 try:
     Base.metadata.create_all(bind=engine)
@@ -51,6 +56,25 @@ async def upload_resume(candidate_id: int, file: UploadFile = File(...), db: Ses
         raise HTTPException(status_code=400, detail="Could not extract text from the PDF")
 
     resume = ResumeRepository(db).create(candidate_id, file.filename, file_bytes, content_text)
+
+    try:
+        extracted = GroqResumeParser().parse(content_text)
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.put(
+                f"{settings.candidate_service_url}/api/candidates/{candidate_id}",
+                json={
+                    "name": extracted.name,
+                    "email": extracted.email,
+                    "phone": extracted.phone,
+                    "experience_years": extracted.experience_years,
+                    "education": extracted.education,
+                    "skills": ", ".join(extracted.skills),
+                },
+            )
+            response.raise_for_status()
+    except (httpx.HTTPError, ValueError) as exc:
+        raise HTTPException(status_code=502, detail=f"Resume extracted but candidate enrichment failed: {exc}") from exc
+
     return resume
 
 

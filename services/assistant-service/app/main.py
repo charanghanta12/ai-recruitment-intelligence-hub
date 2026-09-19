@@ -43,7 +43,7 @@ async def chat(payload: dict):
         "applications": applications,
     }
     response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
+        model=settings.groq_model,
         messages=[
             {"role": "system", "content": "You are a recruitment assistant. Use the provided application data to answer the recruiter question. Do not invent data. Summarize what is relevant and clearly mention any missing information."},
             {"role": "user", "content": str(context)},

@@ -20,7 +20,7 @@ class GroqAIClient:
             raise ValueError("GROQ_API_KEY is not configured")
 
         response = self.client.chat.completions.create(
-            model="openai/gpt-oss-20b",
+            model=settings.groq_model,
             messages=[
                 {"role": "system", "content": "You are an AI hiring analyst. Use only information present in the candidate resume and job description. Do not invent experience or skills. Clearly identify missing information, provide evidence-based observations, and generate useful interview questions. Do not make a final hiring decision or recommend accept/reject. Return valid JSON with exactly these keys: summary (string), matching_skills (array of strings), missing_skills (array of strings), experience_analysis (string), strengths (array of strings), areas_to_explore (array of strings), interview_questions (array of strings). Always include summary and experience_analysis, even when information is missing."},
                 {"role": "user", "content": prompt},

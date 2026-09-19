@@ -10,8 +10,10 @@ if __package__ in (None, ""):
 else:
     from app.config import settings
 
-engine_options = {"connect_args": {"check_same_thread": False}} if settings.database_url.startswith("sqlite") else {}
-engine = create_engine(settings.database_url, future=True, pool_pre_ping=True, **engine_options)
+if not settings.database_url.startswith("postgresql"):
+    raise ValueError("DATABASE_URL must use PostgreSQL; temporary SQLite databases are disabled")
+
+engine = create_engine(settings.database_url, future=True, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
 Base = declarative_base()
 

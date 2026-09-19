@@ -1,3 +1,72 @@
+# RecruitFlow AI
+
+RecruitFlow AI is a recruitment intelligence platform with a Next.js frontend, independent FastAPI services, PostgreSQL persistence, resume storage, interview scheduling, Groq screening, and a recruiter assistant.
+
+## Current Real Workflow
+
+- Candidate CRUD and PDF resume storage in PostgreSQL BYTEA.
+- Resume text extraction with `pypdf`.
+- Validated Groq resume extraction updates the Candidate service with name, email, phone, education, skills, and experience.
+- Job CRUD and application APIs.
+- Interview scheduling backed by the Interview service.
+- AI screening backed by the Screening service and configurable Groq model.
+- Recruiter assistant backed by live candidate, job, and application APIs.
+- Candidate screening status list and filters.
+
+SQLite, mock databases, fake AI answers, and temporary database overrides are not supported.
+
+## Configuration
+
+Copy `.env.example` to `.env` and set your real values:
+
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE
+GROQ_API_KEY=your_key
+GROQ_MODEL=openai/gpt-oss-20b
+```
+
+Never commit `.env`. Rotate any credential exposed in chat or logs.
+
+## Start The Frontend
+
+```powershell
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Start Services
+
+Install backend dependencies once:
+
+```powershell
+python -m pip install -r services/requirements.txt
+```
+
+Start each service from its service directory using the shared root `.env`:
+
+```powershell
+cd services/candidate-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8001
+cd services/job-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8002
+cd services/resume-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8003
+cd services/screening-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8004
+cd services/interview-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8005
+cd services/assistant-service; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8006
+cd services/api-gateway; $env:PYTHONPATH='.'; python -m uvicorn app.main:app --port 8000
+```
+
+## Validation
+
+```powershell
+npx tsc --noEmit
+npm run build
+python -m compileall -q services
+```
+
+## Production Status
+
+Phase 1 core workflows are implemented. Authentication, Alembic migrations, pgvector RAG, persisted agent runs/tool calls/audit logs, MCP integrations, and automated backend tests are still remaining production work. They are intentionally not faked or represented as complete.
 # ai-recruitment-intelligence-hub-3a
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).

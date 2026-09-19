@@ -1,0 +1,16 @@
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+ROOT_ENV_FILE = Path(__file__).resolve().parents[3] / ".env"
+
+
+class Settings(BaseSettings):
+    app_name: str = "job-service"
+    service_port: int = 8002
+    database_url: str = "sqlite:///./job-service.db"
+    model_config = SettingsConfigDict(env_file=ROOT_ENV_FILE, env_prefix="", extra="ignore")
+
+
+settings = Settings()

@@ -1,46 +1,51 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, Activity, BookOpen, BriefcaseBusiness, CalendarDays, Check, ChevronRight, MessageSquareText, Settings, Sparkles, Users, Zap } from 'lucide-react'
+import { Activity, ArrowUpRight, BookOpen, BriefcaseBusiness, CalendarDays, Check, Command, MessageSquareText, Settings, Sparkles, Users, X, Zap } from 'lucide-react'
 
 type Section = 'Home' | 'Candidates' | 'Jobs' | 'Interviews' | 'AI Assistant' | 'Knowledge Base' | 'AI Agents' | 'Activity' | 'Settings'
 
-const nav: { label: Section; icon: typeof Users }[] = [
-  { label: 'Candidates', icon: Users },
-  { label: 'Jobs', icon: BriefcaseBusiness },
-  { label: 'Interviews', icon: CalendarDays },
-  { label: 'AI Assistant', icon: MessageSquareText },
-  { label: 'Knowledge Base', icon: BookOpen },
-  { label: 'AI Agents', icon: Zap },
-  { label: 'Activity', icon: Activity },
-  { label: 'Settings', icon: Settings },
+const destinations: { label: Exclude<Section, 'Home'>; icon: typeof Users; detail: string }[] = [
+  { label: 'Candidates', icon: Users, detail: 'Review talent and signals' },
+  { label: 'Jobs', icon: BriefcaseBusiness, detail: 'Shape your open roles' },
+  { label: 'Interviews', icon: CalendarDays, detail: 'Prepare better conversations' },
+  { label: 'AI Assistant', icon: MessageSquareText, detail: 'Ask your hiring copilot' },
+  { label: 'Knowledge Base', icon: BookOpen, detail: 'Keep your hiring context' },
+  { label: 'AI Agents', icon: Zap, detail: 'Automate the busywork' },
+  { label: 'Activity', icon: Activity, detail: 'Follow every decision' },
+  { label: 'Settings', icon: Settings, detail: 'Tune your workspace' },
 ]
 
 function Brand({ onClick }: { onClick: () => void }) {
-  return <button onClick={onClick} className="rf-brand" aria-label="Go to home"><span className="rf-brand-mark"><Sparkles /></span><span>RecruitFlow <b>AI</b></span></button>
+  return <button className="rf-brand" onClick={onClick} aria-label="Go to RecruitFlow home"><span className="rf-brand-symbol"><Sparkles /></span><span>RecruitFlow <b>AI</b></span></button>
 }
 
-function Home({ onStart }: { onStart: () => void }) {
-  return <section className="rf-home rf-section-enter">
-    <div className="rf-hero-copy">
-      <p className="rf-eyebrow"><span className="rf-live-dot" /> The intelligent hiring workspace</p>
-      <h1>Hire with more <em>clarity.</em></h1>
-      <p className="rf-hero-text">RecruitFlow turns every candidate signal into a confident decision. Simple tools, thoughtful intelligence, better teams.</p>
-      <div className="rf-hero-actions"><button className="rf-primary-button" onClick={onStart}>Start screening <ArrowRight /></button><button className="rf-text-button">Explore workspace <ChevronRight /></button></div>
-      <div className="rf-trust"><span><Check /> Evidence-backed insights</span><span><Check /> Built for human decisions</span></div>
+function Home({ onOpen }: { onOpen: (section: Section) => void }) {
+  return <section className="rf-home rf-enter">
+    <div className="rf-home-copy">
+      <p className="rf-kicker"><span className="rf-pulse" /> A calmer way to hire</p>
+      <h1>Make the <i>right</i><br />people decision.</h1>
+      <p className="rf-lede">RecruitFlow brings signal, context and momentum together so every hire feels clear, considered and human.</p>
+      <div className="rf-actions"><button className="rf-primary" onClick={() => onOpen('Candidates')}>Enter your workspace <ArrowUpRight /></button><button className="rf-command" onClick={() => onOpen('AI Assistant')}><Command /> Ask RecruitFlow <kbd>⌘ K</kbd></button></div>
+      <div className="rf-proof"><span><Check /> Evidence, not noise</span><span><Check /> Built for humans</span></div>
     </div>
-    <div className="rf-hero-art" aria-hidden="true"><div className="rf-art-halo" /><div className="rf-art-orbit orbit-one" /><div className="rf-art-orbit orbit-two" /><div className="rf-hero-orb"><Sparkles /></div><div className="rf-floating-card rf-floating-top"><span className="rf-mini-icon"><Users /></span><div><strong>Candidate signal</strong><small>Strong alignment</small></div><span className="rf-score">94</span></div><div className="rf-floating-card rf-floating-bottom"><span className="rf-mini-icon blue"><Activity /></span><div><strong>Hiring momentum</strong><small>+24% this week</small></div></div></div>
+    <div className="rf-constellation" aria-label="Explore workspace areas">
+      <div className="rf-ring rf-ring-one" /><div className="rf-ring rf-ring-two" /><div className="rf-core"><Sparkles /><small>YOUR<br />WORKSPACE</small></div>
+      {destinations.slice(0, 6).map(({ label, icon: Icon }, index) => <button key={label} className={`rf-node rf-node-${index + 1}`} onClick={() => onOpen(label)} aria-label={`Open ${label}`}><Icon /><span>{label}</span></button>)}
+      <div className="rf-constellation-note">Move through your hiring<br /><strong>with intention.</strong></div>
+    </div>
   </section>
 }
 
-function Workspace({ section }: { section: Exclude<Section, 'Home'> }) {
-  const copy: Record<Exclude<Section, 'Home'>, [string, string, string]> = { Candidates: ['Candidates', 'Your talent, thoughtfully organized.', 'Review candidate profiles, signals and progress in one calm workspace.'], Jobs: ['Open roles', 'The right role starts here.', 'Create, refine and share roles that attract your next great teammate.'], Interviews: ['Interviews', 'Better conversations, better decisions.', 'Keep every interview focused, fair and easy to follow.'], 'AI Assistant': ['AI Assistant', 'Ask better hiring questions.', 'Get grounded answers about candidates, roles and your hiring process.'], 'Knowledge Base': ['Knowledge Base', 'Your hiring intelligence, together.', 'Keep guidelines, principles and context close to every decision.'], 'AI Agents': ['AI Agents', 'Let the busywork disappear.', 'Configure thoughtful agents for screening, scheduling and evaluation.'], Activity: ['Activity', 'Everything in motion.', 'See the latest progress across your recruitment workspace.'], Settings: ['Settings', 'Make RecruitFlow yours.', 'Manage your workspace preferences and API connection.'] }
-  const [title, lead, text] = copy[section]
-  return <section className="rf-workspace rf-section-enter"><div className="rf-workspace-heading"><p className="rf-eyebrow">RecruitFlow workspace</p><h1>{title}</h1><p>{lead}</p></div><div className="rf-workspace-card"><div className="rf-card-glow" /><div className="rf-card-icon"><Sparkles /></div><h2>{title} is ready when you are.</h2><p>{text}</p><button className="rf-primary-button">Open {title} <ArrowRight /></button></div></section>
+function Workspace({ section, onOpen }: { section: Exclude<Section, 'Home'>; onOpen: (section: Section) => void }) {
+  const item = destinations.find((entry) => entry.label === section) ?? destinations[0]
+  const Icon = item.icon
+  return <section className="rf-workspace rf-enter"><button className="rf-back" onClick={() => onOpen('Home')}>Back to home <span>↗</span></button><div className="rf-workspace-intro"><div className="rf-section-icon"><Icon /></div><p className="rf-kicker">RecruitFlow workspace</p><h1>{section}</h1><p className="rf-lede">{item.detail}. Everything you need, arranged with less noise and more intention.</p></div><div className="rf-action-panel"><div><span className="rf-panel-label">Ready when you are</span><h2>Let&apos;s make progress.</h2><p>Your workspace is connected and waiting for your next thoughtful decision.</p></div><button className="rf-primary" onClick={() => onOpen(section)}>Open {section} <ArrowUpRight /></button></div><div className="rf-explore"><span>Explore another area</span>{destinations.filter(({ label }) => label !== section).slice(0, 4).map(({ label }) => <button key={label} onClick={() => onOpen(label)}>{label}</button>)}</div></section>
 }
 
 export default function Page() {
   const [section, setSection] = useState<Section>('Home')
-  const go = (next: Section) => setSection(next)
-  return <div className="rf-app min-h-screen"><header className="rf-header"><div className="rf-header-inner"><Brand onClick={() => go('Home')} /><nav className="rf-top-nav" aria-label="Main navigation"><button className={section === 'Home' ? 'active' : ''} onClick={() => go('Home')}>Home</button>{nav.slice(0, 4).map(({ label }) => <button key={label} className={section === label ? 'active' : ''} onClick={() => go(label)}>{label}</button>)}<button className="rf-more-link" onClick={() => go('Settings')}>More <ChevronRight /></button></nav><button className="rf-header-cta" onClick={() => go('AI Assistant')}>Ask AI <Sparkles /></button></div></header><main className="rf-main">{section === 'Home' ? <Home onStart={() => go('Candidates')} /> : <Workspace section={section} />}</main><footer className="rf-footer"><span>RecruitFlow <b>AI</b></span><span>AI insights, human decisions.</span><div>{nav.slice(4).map(({ label }) => <button key={label} onClick={() => go(label)}>{label}</button>)}</div></footer></div>
+  const [menuOpen, setMenuOpen] = useState(false)
+  const open = (next: Section) => { setSection(next); setMenuOpen(false) }
+  return <div className="rf-app"><header className="rf-header"><Brand onClick={() => open('Home')} /><button className="rf-menu-trigger" onClick={() => setMenuOpen(true)} aria-expanded={menuOpen}><span>Explore</span><span className="rf-menu-dots"><i /><i /><i /></span></button></header><main>{section === 'Home' ? <Home onOpen={open} /> : <Workspace section={section} onOpen={open} />}</main><footer className="rf-footer"><span>RecruitFlow <b>AI</b></span><span>Thoughtful hiring, amplified.</span><button onClick={() => setMenuOpen(true)}>All areas <ArrowUpRight /></button></footer>{menuOpen && <div className="rf-overlay" role="dialog" aria-modal="true" aria-label="Explore RecruitFlow"><div className="rf-menu-card"><div className="rf-menu-head"><div><span className="rf-panel-label">The workspace</span><h2>Where would you like to go?</h2></div><button className="rf-close" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button></div><div className="rf-menu-grid">{destinations.map(({ label, icon: Icon, detail }) => <button key={label} onClick={() => open(label)}><span className="rf-menu-icon"><Icon /></span><span><strong>{label}</strong><small>{detail}</small></span><ArrowUpRight /></button>)}</div></div></div>}</div>
 }
